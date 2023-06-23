@@ -1,0 +1,55 @@
+apiVersion: traefik.containo.us/v1alpha1
+kind: IngressRoute
+metadata:
+  name: {{ include "moaw-search.fullname" . }}-search-ui
+  labels:
+    {{- include "moaw-search.labels" . | nindent 4 }}
+    app.kubernetes.io/component: search-ui
+spec:
+  entryPoints:
+    - websecure
+  routes:
+    - match: Host(`{{ .Values.ingress.host | required "A value for .Values.ingress.host is required" }}`)
+      kind: Rule
+      services:
+        - name: {{ include "moaw-search.fullname" . }}-search-ui
+          port: 8080
+      middlewares:
+        - name: {{ include "moaw-search.fullname" . }}-search-ui-security
+        - name: {{ include "moaw-search.fullname" . }}-search-ui-ratelimit
+        - name: {{ include "moaw-search.fullname" . }}-search-ui-compress
+  tls:
+    {{- toYaml .Values.ingress.tls | nindent 4 }}
+---
+apiVersion: traefik.containo.us/v1alpha1
+kind: Middleware
+metadata:
+  name: {{ include "moaw-search.fullname" . }}-search-ui-security
+  labels:
+    {{- include "moaw-search.labels" . | nindent 4 }}
+    app.kubernetes.io/component: search-ui
+spec:
+  headers:
+    browserXssFilter: true
+---
+apiVersion: traefik.containo.us/v1alpha1
+kind: Middleware
+metadata:
+  name: {{ include "moaw-search.fullname" . }}-search-ui-ratelimit
+  labels:
+    {{- include "moaw-search.labels" . | nindent 4 }}
+    app.kubernetes.io/component: search-ui
+spec:
+  rateLimit:
+    average: 10
+    burst: 50
+---
+apiVersion: traefik.containo.us/v1alpha1
+kind: Middleware
+metadata:
+  name: {{ include "moaw-search.fullname" . }}-search-ui-compress
+  labels:
+    {{- include "moaw-search.labels" . | nindent 4 }}
+    app.kubernetes.io/component: search-ui
+spec:
+  compress: {}

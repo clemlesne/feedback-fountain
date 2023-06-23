@@ -1,0 +1,17 @@
+.results {
+  flex-grow: 1;
+  max-width: 768px;
+
+  &.results--answersLoading {
+    opacity: .5;
+  }
+}
+
+.footer {
+  align-items: flex-start;
+  opacity: .5;
+  display: flex;
+  flex-direction: column;
+  font-size: .8rem;
+  margin: 2rem 2.5rem;
+}

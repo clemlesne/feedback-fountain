@@ -1,0 +1,43 @@
+version: "2"
+services:
+  redis:
+    image: docker.io/redis:7.0-alpine
+    networks:
+      - moaw-search
+    ports:
+      - 6379:6379
+  qdrant:
+    image: docker.io/qdrant/qdrant:v1.2.0
+    networks:
+      - moaw-search
+    ports:
+      - 6333:6333
+    volumes:
+      - qdrant-data:/qdrant/storage
+  search-api:
+    image: ghcr.io/clemlesne/moaw-search/search-api:latest
+    environment:
+      MS_QD_HOST: qdrant
+      MS_REDIS_HOST: redis
+    networks:
+      - moaw-search
+    ports:
+      - 8081:8080
+    depends_on:
+      - qdrant
+    volumes:
+      - .env:/app/.env
+  search-ui:
+    image: ghcr.io/clemlesne/moaw-search/search-ui:latest
+    networks:
+      - moaw-search
+    ports:
+      - 8080:8080
+    volumes:
+      - /tmp
+networks:
+  moaw-search:
+    driver: bridge
+volumes:
+
+  qdrant-data: {}

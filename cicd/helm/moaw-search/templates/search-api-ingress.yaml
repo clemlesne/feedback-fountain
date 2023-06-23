@@ -1,0 +1,69 @@
+apiVersion: traefik.containo.us/v1alpha1
+kind: IngressRoute
+metadata:
+  name: {{ include "moaw-search.fullname" . }}-search-api
+  labels:
+    {{- include "moaw-search.labels" . | nindent 4 }}
+    app.kubernetes.io/component: search-api
+spec:
+  entryPoints:
+    - websecure
+  routes:
+    - match: Host(`{{ .Values.ingress.host | required "A value for .Values.ingress.host is required" }}`) && PathPrefix(`/{{ include "moaw-search.fullname" . }}-search-api`)
+      kind: Rule
+      services:
+        - name: {{ include "moaw-search.fullname" . }}-search-api
+          port: 8080
+      middlewares:
+        - name: {{ include "moaw-search.fullname" . }}-search-api-prefix
+        - name: {{ include "moaw-search.fullname" . }}-search-api-security
+        - name: {{ include "moaw-search.fullname" . }}-search-api-ratelimit
+        - name: {{ include "moaw-search.fullname" . }}-search-api-compress
+  tls:
+    {{- toYaml .Values.ingress.tls | nindent 4 }}
+---
+apiVersion: traefik.containo.us/v1alpha1
+kind: Middleware
+metadata:
+  name: {{ include "moaw-search.fullname" . }}-search-api-prefix
+  labels:
+    {{- include "moaw-search.labels" . | nindent 4 }}
+    app.kubernetes.io/component: search-api
+spec:
+  stripPrefix:
+    prefixes:
+      - "/{{ include "moaw-search.fullname" . }}-search-api"
+---
+apiVersion: traefik.containo.us/v1alpha1
+kind: Middleware
+metadata:
+  name: {{ include "moaw-search.fullname" . }}-search-api-security
+  labels:
+    {{- include "moaw-search.labels" . | nindent 4 }}
+    app.kubernetes.io/component: search-api
+spec:
+  headers:
+    browserXssFilter: true
+    frameDeny: true
+---
+apiVersion: traefik.containo.us/v1alpha1
+kind: Middleware
+metadata:
+  name: {{ include "moaw-search.fullname" . }}-search-api-ratelimit
+  labels:
+    {{- include "moaw-search.labels" . | nindent 4 }}
+    app.kubernetes.io/component: search-api
+spec:
+  rateLimit:
+    average: 1
+    burst: 5
+---
+apiVersion: traefik.containo.us/v1alpha1
+kind: Middleware
+metadata:
+  name: {{ include "moaw-search.fullname" . }}-search-api-compress
+  labels:
+    {{- include "moaw-search.labels" . | nindent 4 }}
+    app.kubernetes.io/component: search-api
+spec:
+  compress: {}

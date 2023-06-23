@@ -1,0 +1,10 @@
+.button {
+  align-items: center;
+  display: flex;
+  flex-direction: row;
+  flex-shrink: 0;
+
+  > *:not(:last-child) {
+    margin-right: 1rem;
+  }
+}
