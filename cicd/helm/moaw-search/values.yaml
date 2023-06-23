@@ -8,7 +8,7 @@ fullnameOverride: ""
 
 # Requires to be binded with an Azure AD identity
 # See: https://learn.microsoft.com/en-us/azure/aks/workload-identity-deploy-cluster
-serviceAccountName: moaw-search-sa
+serviceAccountName: feedback-fountain-sa
 
 ingress:
   # app.contoso.com

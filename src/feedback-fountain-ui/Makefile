@@ -1,33 +1,34 @@
 docker := docker
 version_small ?= $(shell $(MAKE) --directory ../../ --silent version)
 version_full ?= $(shell $(MAKE) --directory ../../ --silent version-full)
-component_name := search-api
-container_name := ghcr.io/clemlesne/moaw-search/$(component_name)
+component_name := feedback-fountain-ui
+container_name := ghcr.io/clemlesne/feedback-fountain/$(component_name)
 
 install:
-	python3 -m pip install -r requirements.txt
+	npm install
+
+upgrade:
+	npm update
 
 test:
-	@echo "➡️ Running Black..."
-	python3 -m black --check .
+	@echo "➡️ Scanning for outdated dependencies..."
+	npm outdated
+
+	@echo "➡️ Running NPM Lint..."
+	npm run lint
 
 	@echo "➡️ Running Hadolint..."
 	find . -name "Dockerfile*" -exec bash -c "echo 'File {}:' && hadolint {}" \;
 
 lint:
-	@echo "➡️ Running Black..."
-	python3 -m black .
+	@echo "➡️ Running NPM Lint..."
+	npm run lint
 
 	@echo "➡️ Running Hadolint..."
 	find . -name "Dockerfile*" -exec bash -c "echo 'File {}:' && hadolint {}" \;
 
 start:
-	VERSION=$(version_full) python3 -m uvicorn main:api \
-		--header x-version:$${VERSION} \
-		--no-server-header \
-		--port 8081 \
-		--proxy-headers \
-		--reload
+	npm run dev
 
 build:
 	$(docker) build \

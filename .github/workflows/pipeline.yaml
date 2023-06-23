@@ -79,14 +79,14 @@ jobs:
 
       - name: Package Helm chart
         run: |
-          cp README.md cicd/helm/moaw-search
+          cp README.md cicd/helm/feedback-fountain
 
           helm package \
             --app-version ${{ steps.version.outputs.version }} \
             --dependency-update \
             --destination .cr-release-packages \
             --version ${{ steps.version.outputs.version }} \
-            cicd/helm/moaw-search
+            cicd/helm/feedback-fountain
 
       - name: Cache Helm chart
         uses: actions/upload-artifact@v3.1.2
@@ -99,7 +99,7 @@ jobs:
           helm template \
             --output-dir .helm-template \
             --values test/helm/values.yaml \
-            .cr-release-packages/moaw-search-${{ steps.version.outputs.version }}.tgz
+            .cr-release-packages/feedback-fountain-${{ steps.version.outputs.version }}.tgz
 
       - name: Run SAST Snyk for Helm
         # Snyk can be used to break the build when it detects security issues. In this case we want to upload the issues to GitHub Security
@@ -174,7 +174,7 @@ jobs:
       packages: write
     strategy:
       matrix:
-        src: [search-api, search-ui]
+        src: [feedback-fountain-api, feedback-fountain-ui]
     steps:
       - name: Checkout
         uses: actions/checkout@v3.5.2

@@ -1,7 +1,7 @@
 apiVersion: crd.projectcalico.org/v1
 kind: NetworkPolicy
 metadata:
-  name: {{ include "moaw-search.fullname" . }}
+  name: {{ include "feedback-fountain.fullname" . }}
 spec:
   egress:
     - action: Allow

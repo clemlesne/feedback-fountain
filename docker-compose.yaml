@@ -1,43 +1,55 @@
 version: "2"
 services:
+  postgres:
+    image: docker.io/postgres:15-alpine
+    networks:
+      - feedback-fountain
+    ports:
+      - 5432:5432
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: postgres
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
   redis:
     image: docker.io/redis:7.0-alpine
     networks:
-      - moaw-search
+      - feedback-fountain
     ports:
       - 6379:6379
   qdrant:
     image: docker.io/qdrant/qdrant:v1.2.0
     networks:
-      - moaw-search
+      - feedback-fountain
     ports:
       - 6333:6333
     volumes:
       - qdrant-data:/qdrant/storage
-  search-api:
-    image: ghcr.io/clemlesne/moaw-search/search-api:latest
-    environment:
-      MS_QD_HOST: qdrant
-      MS_REDIS_HOST: redis
-    networks:
-      - moaw-search
-    ports:
-      - 8081:8080
-    depends_on:
-      - qdrant
-    volumes:
-      - .env:/app/.env
-  search-ui:
-    image: ghcr.io/clemlesne/moaw-search/search-ui:latest
-    networks:
-      - moaw-search
-    ports:
-      - 8080:8080
-    volumes:
-      - /tmp
+  # feedback-fountain-api:
+  #   image: ghcr.io/clemlesne/feedback-fountain/feedback-fountain-api:latest
+  #   environment:
+  #     MS_QD_HOST: qdrant
+  #     MS_REDIS_HOST: redis
+  #   networks:
+  #     - feedback-fountain
+  #   ports:
+  #     - 8081:8080
+  #   depends_on:
+  #     - qdrant
+  #   volumes:
+  #     - .env:/app/.env
+  # feedback-fountain-ui:
+  #   image: ghcr.io/clemlesne/feedback-fountain/feedback-fountain-ui:latest
+  #   networks:
+  #     - feedback-fountain
+  #   ports:
+  #     - 8080:8080
+  #   volumes:
+  #     - /tmp
 networks:
-  moaw-search:
+  feedback-fountain:
     driver: bridge
 volumes:
-
+  postgres-data: {}
   qdrant-data: {}

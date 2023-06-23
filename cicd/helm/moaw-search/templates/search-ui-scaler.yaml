@@ -1,13 +1,13 @@
 apiVersion: keda.sh/v1alpha1
 kind: ScaledObject
 metadata:
-  name: {{ include "moaw-search.fullname" . }}-search-ui
+  name: {{ include "feedback-fountain.fullname" . }}-feedback-fountain-ui
   labels:
-    {{- include "moaw-search.labels" . | nindent 4 }}
-    app.kubernetes.io/component: search-ui
+    {{- include "feedback-fountain.labels" . | nindent 4 }}
+    app.kubernetes.io/component: feedback-fountain-ui
 spec:
   scaleTargetRef:
-    name: {{ include "moaw-search.fullname" . }}-search-ui
+    name: {{ include "feedback-fountain.fullname" . }}-feedback-fountain-ui
   minReplicaCount: {{ .Values.replicaCount | int | required "A value for .Values.replicaCount is required" }}
   triggers:
     - type: cpu

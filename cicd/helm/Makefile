@@ -11,4 +11,4 @@ deploy:
 		--timeout 5m \
 		--values .values.yaml \
 		--wait \
-		default moaw-search
+		default feedback-fountain

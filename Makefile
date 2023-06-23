@@ -10,16 +10,16 @@ version-full:
 	@bash ./cicd/version/version.sh -g . -c -m
 
 build:
-	@make -C src/search-api build
-	@make -C src/search-ui build
+	@make -C src/feedback-fountain-api build
+	@make -C src/feedback-fountain-ui build
 
 test:
-	@make -C src/search-api test
-	@make -C src/search-ui test
+	@make -C src/feedback-fountain-api test
+	@make -C src/feedback-fountain-ui test
 
 lint:
-	@make -C src/search-api lint
-	@make -C src/search-ui lint
+	@make -C src/feedback-fountain-api lint
+	@make -C src/feedback-fountain-ui lint
 
 start:
 	docker-compose up -d

@@ -7,7 +7,7 @@ import PropTypes from "prop-types"
 import SearchHistory from "./SearchHistory";
 import useLocalStorageState from "use-local-storage-state";
 
-function SearchBar({ fetchAnswers, loading }) {
+function SearchBar({ fetchFeedbacks }) {
   // Constants
   const SEARCH_LIMIT = 5;
   // State
@@ -76,7 +76,7 @@ function SearchBar({ fetchAnswers, loading }) {
 
       // Cancel the search if the value is empty
       if (!value) return;
-      fetchAnswers(value);
+      fetchFeedbacks(value);
 
       // Cancel the save if the value is empty
       if (!historyDb) return;
@@ -170,7 +170,7 @@ function SearchBar({ fetchAnswers, loading }) {
 
   return (
     <div className="searchBar">
-      <h1><span>🐱</span> <span>MOAW Search</span></h1>
+      <h1><span>📣</span> <span>Feedback Fountain</span></h1>
       <span>
         <input
           autoComplete="off"
@@ -190,8 +190,7 @@ function SearchBar({ fetchAnswers, loading }) {
       </span>
       <Button
         disabled={!(value && value.length > 0)}
-        emoji="🧠"
-        loading={loading}
+        emoji="🧐"
         onClick={() => fetch(value)}
         text="Search"
       />
@@ -200,8 +199,7 @@ function SearchBar({ fetchAnswers, loading }) {
 }
 
 SearchBar.propTypes = {
-  fetchAnswers: PropTypes.func.isRequired,
-  loading: PropTypes.bool.isRequired,
+  fetchFeedbacks: PropTypes.func.isRequired,
 }
 
 export default SearchBar;

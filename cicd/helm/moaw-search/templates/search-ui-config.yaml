@@ -1,15 +1,15 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: {{ include "moaw-search.fullname" . }}-search-ui
+  name: {{ include "feedback-fountain.fullname" . }}-feedback-fountain-ui
   labels:
-    {{- include "moaw-search.labels" . | nindent 4 }}
-    app.kubernetes.io/component: search-ui
+    {{- include "feedback-fountain.labels" . | nindent 4 }}
+    app.kubernetes.io/component: feedback-fountain-ui
 data:
   default.conf: |
     server {
       listen 8080;
-      server_name search-ui;
+      server_name feedback-fountain-ui;
 
       location = /health/liveness {
         return 204;
@@ -21,7 +21,7 @@ data:
         try_files $uri /index.html;
 
         # Rewrite the API URL
-        sub_filter 'http://127.0.0.1:8081' 'https://{{ .Values.ingress.host | required "A value for .Values.ingress.host is required" }}/{{ include "moaw-search.fullname" . }}-search-api';
+        sub_filter 'http://127.0.0.1:8081' 'https://{{ .Values.ingress.host | required "A value for .Values.ingress.host is required" }}/{{ include "feedback-fountain.fullname" . }}-feedback-fountain-api';
         sub_filter_once off;
         sub_filter_types *;
 

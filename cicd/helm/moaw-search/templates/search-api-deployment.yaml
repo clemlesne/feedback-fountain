@@ -1,28 +1,28 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ include "moaw-search.fullname" . }}-search-api
+  name: {{ include "feedback-fountain.fullname" . }}-feedback-fountain-api
   labels:
-    {{- include "moaw-search.labels" . | nindent 4 }}
-    app.kubernetes.io/component: search-api
+    {{- include "feedback-fountain.labels" . | nindent 4 }}
+    app.kubernetes.io/component: feedback-fountain-api
 spec:
   selector:
     matchLabels:
-      {{- include "moaw-search.selectorLabels" . | nindent 6 }}
-      app.kubernetes.io/component: search-api
+      {{- include "feedback-fountain.selectorLabels" . | nindent 6 }}
+      app.kubernetes.io/component: feedback-fountain-api
   template:
     metadata:
       labels:
-        {{- include "moaw-search.selectorLabels" . | nindent 8 }}
-        app.kubernetes.io/component: search-api
+        {{- include "feedback-fountain.selectorLabels" . | nindent 8 }}
+        app.kubernetes.io/component: feedback-fountain-api
         azure.workload.identity/use: "true"
       annotations:
-        checksum/secret: {{ include (print $.Template.BasePath "/search-api-secret.yaml") . | sha256sum }}
+        checksum/secret: {{ include (print $.Template.BasePath "/feedback-fountain-api-secret.yaml") . | sha256sum }}
     spec:
       serviceAccountName: {{ .Values.serviceAccountName | required "A value for .Values.serviceAccountName is required" }}
       containers:
-        - name: search-api
-          image: "ghcr.io/clemlesne/moaw-search/search-api:{{ .Values.image.tag | default .Chart.Version }}"
+        - name: feedback-fountain-api
+          image: "ghcr.io/clemlesne/feedback-fountain/feedback-fountain-api:{{ .Values.image.tag | default .Chart.Version }}"
           imagePullPolicy: Always
           ports:
             - name: http
@@ -48,11 +48,11 @@ spec:
               port: http
           env:
             - name: MS_ROOT_PATH
-              value: /{{ include "moaw-search.fullname" . }}-search-api
+              value: /{{ include "feedback-fountain.fullname" . }}-feedback-fountain-api
             - name: MS_ACS_API_TOKEN
               valueFrom:
                 secretKeyRef:
-                  name: {{ include "moaw-search.fullname" . }}-search-api
+                  name: {{ include "feedback-fountain.fullname" . }}-feedback-fountain-api
                   key: MS_ACS_API_TOKEN
             - name: MS_ACS_API_BASE
               value: "{{ .Values.api.acs.base | required "A value for .Values.api.acs.base is required" }}"

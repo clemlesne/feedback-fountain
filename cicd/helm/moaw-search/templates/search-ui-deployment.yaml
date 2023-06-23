@@ -1,26 +1,26 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ include "moaw-search.fullname" . }}-search-ui
+  name: {{ include "feedback-fountain.fullname" . }}-feedback-fountain-ui
   labels:
-    {{- include "moaw-search.labels" . | nindent 4 }}
-    app.kubernetes.io/component: search-ui
+    {{- include "feedback-fountain.labels" . | nindent 4 }}
+    app.kubernetes.io/component: feedback-fountain-ui
 spec:
   selector:
     matchLabels:
-      {{- include "moaw-search.selectorLabels" . | nindent 6 }}
-      app.kubernetes.io/component: search-ui
+      {{- include "feedback-fountain.selectorLabels" . | nindent 6 }}
+      app.kubernetes.io/component: feedback-fountain-ui
   template:
     metadata:
       labels:
-        {{- include "moaw-search.selectorLabels" . | nindent 8 }}
-        app.kubernetes.io/component: search-ui
+        {{- include "feedback-fountain.selectorLabels" . | nindent 8 }}
+        app.kubernetes.io/component: feedback-fountain-ui
       annotations:
-        checksum/config: {{ include (print $.Template.BasePath "/search-ui-config.yaml") . | sha256sum }}
+        checksum/config: {{ include (print $.Template.BasePath "/feedback-fountain-ui-config.yaml") . | sha256sum }}
     spec:
       containers:
-        - name: search-ui
-          image: "ghcr.io/clemlesne/moaw-search/search-ui:{{ .Values.image.tag | default .Chart.Version }}"
+        - name: feedback-fountain-ui
+          image: "ghcr.io/clemlesne/feedback-fountain/feedback-fountain-ui:{{ .Values.image.tag | default .Chart.Version }}"
           imagePullPolicy: Always
           ports:
             - name: http
@@ -47,6 +47,6 @@ spec:
       volumes:
         - name: config
           configMap:
-            name: {{ include "moaw-search.fullname" . }}-search-ui
+            name: {{ include "feedback-fountain.fullname" . }}-feedback-fountain-ui
         - name: tmp
           emptyDir: {}

@@ -1,46 +1,46 @@
 apiVersion: traefik.containo.us/v1alpha1
 kind: IngressRoute
 metadata:
-  name: {{ include "moaw-search.fullname" . }}-search-api
+  name: {{ include "feedback-fountain.fullname" . }}-feedback-fountain-api
   labels:
-    {{- include "moaw-search.labels" . | nindent 4 }}
-    app.kubernetes.io/component: search-api
+    {{- include "feedback-fountain.labels" . | nindent 4 }}
+    app.kubernetes.io/component: feedback-fountain-api
 spec:
   entryPoints:
     - websecure
   routes:
-    - match: Host(`{{ .Values.ingress.host | required "A value for .Values.ingress.host is required" }}`) && PathPrefix(`/{{ include "moaw-search.fullname" . }}-search-api`)
+    - match: Host(`{{ .Values.ingress.host | required "A value for .Values.ingress.host is required" }}`) && PathPrefix(`/{{ include "feedback-fountain.fullname" . }}-feedback-fountain-api`)
       kind: Rule
       services:
-        - name: {{ include "moaw-search.fullname" . }}-search-api
+        - name: {{ include "feedback-fountain.fullname" . }}-feedback-fountain-api
           port: 8080
       middlewares:
-        - name: {{ include "moaw-search.fullname" . }}-search-api-prefix
-        - name: {{ include "moaw-search.fullname" . }}-search-api-security
-        - name: {{ include "moaw-search.fullname" . }}-search-api-ratelimit
-        - name: {{ include "moaw-search.fullname" . }}-search-api-compress
+        - name: {{ include "feedback-fountain.fullname" . }}-feedback-fountain-api-prefix
+        - name: {{ include "feedback-fountain.fullname" . }}-feedback-fountain-api-security
+        - name: {{ include "feedback-fountain.fullname" . }}-feedback-fountain-api-ratelimit
+        - name: {{ include "feedback-fountain.fullname" . }}-feedback-fountain-api-compress
   tls:
     {{- toYaml .Values.ingress.tls | nindent 4 }}
 ---
 apiVersion: traefik.containo.us/v1alpha1
 kind: Middleware
 metadata:
-  name: {{ include "moaw-search.fullname" . }}-search-api-prefix
+  name: {{ include "feedback-fountain.fullname" . }}-feedback-fountain-api-prefix
   labels:
-    {{- include "moaw-search.labels" . | nindent 4 }}
-    app.kubernetes.io/component: search-api
+    {{- include "feedback-fountain.labels" . | nindent 4 }}
+    app.kubernetes.io/component: feedback-fountain-api
 spec:
   stripPrefix:
     prefixes:
-      - "/{{ include "moaw-search.fullname" . }}-search-api"
+      - "/{{ include "feedback-fountain.fullname" . }}-feedback-fountain-api"
 ---
 apiVersion: traefik.containo.us/v1alpha1
 kind: Middleware
 metadata:
-  name: {{ include "moaw-search.fullname" . }}-search-api-security
+  name: {{ include "feedback-fountain.fullname" . }}-feedback-fountain-api-security
   labels:
-    {{- include "moaw-search.labels" . | nindent 4 }}
-    app.kubernetes.io/component: search-api
+    {{- include "feedback-fountain.labels" . | nindent 4 }}
+    app.kubernetes.io/component: feedback-fountain-api
 spec:
   headers:
     browserXssFilter: true
@@ -49,10 +49,10 @@ spec:
 apiVersion: traefik.containo.us/v1alpha1
 kind: Middleware
 metadata:
-  name: {{ include "moaw-search.fullname" . }}-search-api-ratelimit
+  name: {{ include "feedback-fountain.fullname" . }}-feedback-fountain-api-ratelimit
   labels:
-    {{- include "moaw-search.labels" . | nindent 4 }}
-    app.kubernetes.io/component: search-api
+    {{- include "feedback-fountain.labels" . | nindent 4 }}
+    app.kubernetes.io/component: feedback-fountain-api
 spec:
   rateLimit:
     average: 1
@@ -61,9 +61,9 @@ spec:
 apiVersion: traefik.containo.us/v1alpha1
 kind: Middleware
 metadata:
-  name: {{ include "moaw-search.fullname" . }}-search-api-compress
+  name: {{ include "feedback-fountain.fullname" . }}-feedback-fountain-api-compress
   labels:
-    {{- include "moaw-search.labels" . | nindent 4 }}
-    app.kubernetes.io/component: search-api
+    {{- include "feedback-fountain.labels" . | nindent 4 }}
+    app.kubernetes.io/component: feedback-fountain-api
 spec:
   compress: {}
